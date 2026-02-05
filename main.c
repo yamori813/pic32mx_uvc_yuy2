@@ -262,7 +262,6 @@ void ProcessIO(void)
 void EmulateCamera(void)
 {
 	int i;
-	static int eof = 0;
 	static uint8_t packet[255];
 	static uint8_t frame_toggle=0;
 	static uint16_t picture_index=0;
@@ -274,19 +273,14 @@ void EmulateCamera(void)
 		packet[1] = frame_toggle; //toggle frame bit
 		packet[1] |= UVC_STREAM_EOH;
 
-		if (eof) {
-			tosend = 0;
-			eof = 0;
+		if (picture_index * (MAXPAYLOAD - 2) >= MAX_FRAME_SIZE) {
+			tosend = MAX_FRAME_SIZE - (picture_index - 1) * (MAXPAYLOAD - 2);
 			packet[1] |= UVC_STREAM_EOF;
 
 			picture_index = 0;
 			frame_toggle ^= 1;
-		} else if (picture_index * (MAXPAYLOAD - 2) >= MAX_FRAME_SIZE) {
-			tosend = MAX_FRAME_SIZE - (picture_index - 1) * (MAXPAYLOAD - 2);
-			eof = 1;
 		} else {
 			tosend = MAXPAYLOAD - 2;
-			eof = 0;
 		}
 
 		if(tosend != 0) {
