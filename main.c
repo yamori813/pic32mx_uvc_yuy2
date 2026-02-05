@@ -203,6 +203,8 @@ void UserInit(void)
 
     xfunc_out=UART1PutChar;
 
+    xprintf("start uvc\n");
+
 
     //initialize the variable holding the handle for the last
     // transmission

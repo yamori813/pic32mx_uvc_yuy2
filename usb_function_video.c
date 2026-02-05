@@ -7,6 +7,7 @@
 #include "HardwareProfile_MX220F032B.h"
 #include "./USB/usb.h"
 #include "usb_function_video.h"
+#include "xprintf.h"
 
 #ifdef USB_USE_VIDEO_CLASS
 
@@ -23,6 +24,10 @@ static char buf[26] = {0x00, 0x00, 0x01, 0x01, DBVAL(INTERVAL), 0x00, 0x00, 0x00
 	if(SetupPkt.RequestType != USB_SETUP_TYPE_CLASS_BITFIELD) return;
 
 	mLED_1_On();
+	xprintf("Vidio Request %x\n",(SetupPkt.bRequest));
+	for(i = 0;i < SetupPkt.wLength; ++i)
+		xprintf("%02x ", (unsigned char)buf[i]);
+	xprintf("\n");
 	switch(SetupPkt.bRequest)
 	{
 		case USB_VIDEO_CS_SET_CUR:
