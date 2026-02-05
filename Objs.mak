@@ -8,4 +8,6 @@ OBJS = \
 	usb_function_video.o \
 	crt.o		\
 	config.o	\
+	uart1.o	\
+	xprintf.o	\
 	sbrk.o

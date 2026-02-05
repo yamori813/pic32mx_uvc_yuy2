@@ -49,6 +49,8 @@
 #include "./USB/usb.h"
 #include "HardwareProfile.h"
 #include "usb_function_video.h"
+#include "uart1.h"
+#include "xprintf.h"
 
 #include <stdint.h>
 #define PICTURE_WIDTH 160
@@ -196,6 +198,11 @@ void UserInit(void)
 
     //Initialize all of the push buttons
     mInitAllSwitches();
+
+    UART1Init();
+
+    xfunc_out=UART1PutChar;
+
 
     //initialize the variable holding the handle for the last
     // transmission
