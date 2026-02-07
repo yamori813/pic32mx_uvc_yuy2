@@ -283,8 +283,10 @@ void EmulateCamera(void)
 			picture_index = 0;
 			frame_toggle ^= 1;
 			++pat;
-			if (pat == 256)
+			if (pat == 256) {
 				pat = 0;
+				PORTToggleBits(IOPORT_B, BIT_15);
+			}
 		} else {
 			tosend = MAXPAYLOAD - 2;
 		}

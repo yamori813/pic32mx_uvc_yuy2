@@ -1,5 +1,5 @@
-# PIC32MX usbhost build make file
-# with PinguinoX.4 (gcc 4.6)
+# PIC32MX uvc build make file
+# with PinguinoX.4 (gcc 4)
 # use GNU make
 
 # newest Microchip Libraries for Applications not support PIC32MX
@@ -14,10 +14,9 @@ LKRSCRIPT=selfboot.ld
 PROC=32MX220F032B
 FEATURE=220
 
-
 PICLIBS=$(MP)/lib/no-float/libmchp_peripheral_$(PROC).a
 PROCESSOR_O=processor.o
-HEAP_SIZE=512
+HEAP_SIZE=2048
 
 LDFLAGS=-msoft-float -Wl,--gc-sections $(MIPS16) \
 	-L. -L$(MP)/lib/proc/$(PROC)/ \
@@ -51,11 +50,7 @@ include ./Objs.mak
 CFLAGS=-fdollars-in-identifiers $(INCLUDEDIRS) -G0
 CFLAGS+=-D__PIC32MX__ -D__$(PROC)__
 CFLAGS+=-D__PIC32_FEATURE_SET__=$(FEATURE)
-#CFLAGS+=-DCONFIG_EC12MHz
-#CFLAGS+=-DPUSHSW
 CFLAGS+=-D__XC32
-# 24 bit support is not work corrctly. Only work at 32KHz
-#CFLAGS+=-DSAMPLE24
 
 all: $(OBJS)
 	cp $(MP)/lib/proc/$(PROC)/processor.o .
