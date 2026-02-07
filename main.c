@@ -51,10 +51,12 @@
 #include "usb_function_video.h"
 #include "uart1.h"
 #include "xprintf.h"
+#include "yuv.h"
 
 #include <stdint.h>
 #define PICTURE_WIDTH 160
 #define PICTURE_HIGHT 120
+
 
 USB_VOLATILE BYTE msCounter;
 
@@ -265,6 +267,7 @@ void EmulateCamera(void)
 	static uint8_t packet[255];
 	static uint8_t frame_toggle=0;
 	static uint16_t picture_index=0;
+	static uint16_t pat=0;
 	volatile uint16_t tosend;
 
 	if(!USBHandleBusy(USBTxHandle)) {
@@ -279,14 +282,19 @@ void EmulateCamera(void)
 
 			picture_index = 0;
 			frame_toggle ^= 1;
+			++pat;
+			if (pat == 256)
+				pat = 0;
 		} else {
 			tosend = MAXPAYLOAD - 2;
 		}
 
 		if(tosend != 0) {
+			int y;
+			y = rgb_to_yuy2(pat, pat, pat);
 			for (i = 0; i < tosend; i += 2) {
-                		packet[2 + i] = 0xeb;
-                		packet[3 + i] = 0x80;
+                		packet[2 + i] = y >> 8;
+                		packet[3 + i] = y & 0xff;
 			}
 	                ++picture_index;
 		}
